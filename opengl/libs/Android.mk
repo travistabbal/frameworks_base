@@ -22,12 +22,9 @@ LOCAL_LDLIBS := -lpthread -ldl
 LOCAL_MODULE:= libEGL
 LOCAL_LDFLAGS += -Wl,--exclude-libs=ALL
 LOCAL_SHARED_LIBRARIES += libdl
-# Bionic's private TLS header relies on the ARCH_ARM_HAVE_TLS_REGISTER to
-# select the appropriate TLS codepath
-ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
-    LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
-endif
-# we need to access the private Bionic header <bionic_tls.h>
+
+LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+LOCAL_CFLAGS += -DHAVE_TEGRA_ERRATA_657451
 LOCAL_C_INCLUDES += bionic/libc/private
 
 LOCAL_CFLAGS += -DLOG_TAG=\"libEGL\"
@@ -41,6 +38,9 @@ endif
 
 ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
   LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+endif
+ifeq ($(TARGET_HAVE_TEGRA_ERRATA_657451),true)
+  LOCAL_CFLAGS += -DHAVE_TEGRA_ERRATA_657451
 endif
 
 include $(BUILD_SHARED_LIBRARY)
@@ -78,10 +78,8 @@ LOCAL_LDLIBS := -lpthread -ldl
 LOCAL_MODULE:= libGLESv1_CM
 
 LOCAL_SHARED_LIBRARIES += libdl
-# we need to access the private Bionic header <bionic_tls.h>
-ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
-    LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
-endif
+LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+LOCAL_CFLAGS += -DHAVE_TEGRA_ERRATA_657451
 LOCAL_C_INCLUDES += bionic/libc/private
 
 LOCAL_CFLAGS += -DLOG_TAG=\"libGLESv1\"
@@ -90,6 +88,9 @@ LOCAL_CFLAGS += -fvisibility=hidden
 
 ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
   LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+endif
+ifeq ($(TARGET_HAVE_TEGRA_ERRATA_657451),true)
+  LOCAL_CFLAGS += -DHAVE_TEGRA_ERRATA_657451
 endif
 
 include $(BUILD_SHARED_LIBRARY)
@@ -110,10 +111,8 @@ LOCAL_LDLIBS := -lpthread -ldl
 LOCAL_MODULE:= libGLESv2
 
 LOCAL_SHARED_LIBRARIES += libdl
-# we need to access the private Bionic header <bionic_tls.h>
-ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
-    LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
-endif
+LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+LOCAL_CFLAGS += -DHAVE_TEGRA_ERRATA_657451
 LOCAL_C_INCLUDES += bionic/libc/private
 
 LOCAL_CFLAGS += -DLOG_TAG=\"libGLESv2\"
@@ -122,6 +121,9 @@ LOCAL_CFLAGS += -fvisibility=hidden
 
 ifeq ($(ARCH_ARM_HAVE_TLS_REGISTER),true)
   LOCAL_CFLAGS += -DHAVE_ARM_TLS_REGISTER
+endif
+ifeq ($(TARGET_HAVE_TEGRA_ERRATA_657451),true)
+  LOCAL_CFLAGS += -DHAVE_TEGRA_ERRATA_657451
 endif
 
 include $(BUILD_SHARED_LIBRARY)

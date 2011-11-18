@@ -41,11 +41,23 @@ using namespace android;
 
 #define DEBUG_CALL_GL_API 0
 
+#define USE_FAST_TLS_KEY 1
+#define HAVE_TEGRA_ERRATA_657451 1
+
 #if USE_FAST_TLS_KEY
+
+    #ifdef HAVE_TEGRA_ERRATA_657451
+        #define MUNGE_TLS(_tls) \
+            "bfi " #_tls ", " #_tls ", #20, #1 \n" \
+            "bic " #_tls ", " #_tls ", #1 \n"
+    #else
+        #define MUNGE_TLS(_tls) "\n"
+    #endif
 
     #ifdef HAVE_ARM_TLS_REGISTER
         #define GET_TLS(reg) \
-            "mrc p15, 0, " #reg ", c13, c0, 3 \n"
+            "mrc p15, 0, " #reg ", c13, c0, 3 \n" \
+            MUNGE_TLS(reg)
     #else
         #define GET_TLS(reg) \
             "mov   " #reg ", #0xFFFF0FFF      \n"  \
