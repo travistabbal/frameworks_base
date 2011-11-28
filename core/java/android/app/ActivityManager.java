@@ -216,23 +216,28 @@ public class ActivityManager {
      * @hide
      */
     static public boolean isHighEndGfx(Display display) {
-        MemInfoReader reader = new MemInfoReader();
-        reader.readMemInfo();
-        if (reader.getTotalSize() >= (512*1024*1024)) {
-            // If the device has at least 512MB RAM available to the kernel,
-            // we can afford the overhead of graphics acceleration.
-            return true;
-        }
-        Point p = new Point();
-        display.getRealSize(p);
-        int pixels = p.x * p.y;
-        if (pixels >= (1024*600)) {
-            // If this is a sufficiently large screen, then there are enough
-            // pixels on it that we'd really like to use hw drawing.
-            return true;
-        }
+        if (SystemProperties.get("ro.config.disable_hw_accel").equals("true")) {
+        	return false;
+        } else {
+
+					MemInfoReader reader = new MemInfoReader();
+					reader.readMemInfo();
+					if (reader.getTotalSize() >= (512*1024*1024)) {
+							// If the device has at least 512MB RAM available to the kernel,
+							// we can afford the overhead of graphics acceleration.
+							return true;
+					}
+					Point p = new Point();
+					display.getRealSize(p);
+					int pixels = p.x * p.y;
+					if (pixels >= (1024*600)) {
+							// If this is a sufficiently large screen, then there are enough
+							// pixels on it that we'd really like to use hw drawing.
+							return true;
+					}
         return false;
-    }
+        }
+     }
 
     /**
      * Use to decide whether the running device can be considered a "large
